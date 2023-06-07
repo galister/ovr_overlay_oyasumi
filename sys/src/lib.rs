@@ -20,6 +20,17 @@ include_cpp! {
     generate!("vr::VRSystem")
     generate!("vr::k_unMaxPropertyStringSize")
 
+    // VREvents
+    generate!("vr::VREvent_t")
+    generate!("vr::VREvent_Data_t")
+    generate_pod!("vr::VREvent_Property_t")
+
+    // VR Settings
+    generate!("vr::IVRSettings")
+    generate!("vr::VRSettings")
+    generate!("vr::k_pch_SteamVR_Section")
+    generate!("vr::k_pch_CollisionBounds_Section")
+
     generate!("vr::IVROverlay")
     generate!("vr::VROverlay")
     generate_pod!("vr::EVROverlayError")
@@ -33,6 +44,8 @@ include_cpp! {
 
     generate_pod!("vr::ETrackingUniverseOrigin")
     generate!("vr::HmdMatrix34_t")
+    generate_pod!("vr::HmdVector3_t")
+    generate_pod!("vr::HmdQuaternion_t")
 
     generate_pod!("vr::VRTextureBounds_t")
 

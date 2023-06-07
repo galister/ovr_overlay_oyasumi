@@ -11,11 +11,18 @@ edition = "2021"
 rust-version = "1.65" # GAT and if-else
 
 [features]
-default = ["ovr_applications", "ovr_chaperone_setup", "ovr_input"]
+default = [
+    "ovr_applications",
+    "ovr_chaperone_setup",
+    "ovr_input",
+    "ovr_settings",
+    "ovr_system",
+]
 ovr_applications = []
 ovr_chaperone_setup = []
 ovr_input = []
 ovr_system = []
+ovr_settings = []
 
 [dependencies]
 ovr_overlay_sys = { version = "=0.0.0", path = "sys" }
@@ -26,6 +33,7 @@ log = "0.4"
 nalgebra = { version = "0.30", optional = true }
 slice-of-array = "0.3"
 enumset = "1.0.12"
+byteorder = "1.4.3"
 
 
 [workspace]

@@ -23,6 +23,11 @@ pub mod system;
 #[cfg(feature = "ovr_system")]
 use self::system::SystemManager;
 
+#[cfg(feature = "ovr_settings")]
+pub mod settings;
+#[cfg(feature = "ovr_settings")]
+use self::settings::SettingsManager;
+
 #[cfg(feature = "ovr_applications")]
 pub mod applications;
 #[cfg(feature = "ovr_applications")]
@@ -48,20 +53,17 @@ lazy_static! {
 /// Shutting down this context is unsafe, so if this is dropped, the context will
 /// remain active, as leaking resources is better than accidentally causing unsafe
 /// behavior. To actually shut down, call [`Self::shutdown()`]..
+#[derive(Clone)]
 pub struct Context {}
 impl Context {
-    pub fn init() -> Result<Self, InitError> {
+    pub fn init(application_type: sys::EVRApplicationType) -> Result<Self, InitError> {
         if let Ok(guard) = INITIALIZED.try_lock() {
             if *guard {
                 return Err(InitError::AlreadyInitialized);
             }
             let mut err = std::mem::MaybeUninit::<sys::EVRInitError>::uninit();
             let err = unsafe {
-                let _ = sys::VR_Init(
-                    err.as_mut_ptr(),
-                    sys::EVRApplicationType::VRApplication_Overlay,
-                    std::ptr::null(),
-                );
+                let _ = sys::VR_Init(err.as_mut_ptr(), application_type, std::ptr::null());
                 err.assume_init()
             };
             EVRInitError::new(err)?;
@@ -74,7 +76,7 @@ impl Context {
     // TODO: Is this actually unsafe?
     /// # Safety
     /// see <https://docs.rs/openvr/latest/openvr/struct.Context.html#safety>
-    pub unsafe fn shutdown(self) {
+    pub unsafe fn shutdown(&self) {
         sys::VR_Shutdown()
     }
 
@@ -95,6 +97,11 @@ impl Context {
     #[cfg(feature = "ovr_system")]
     pub fn system_mngr(&self) -> SystemManager<'_> {
         SystemManager::new(self)
+    }
+
+    #[cfg(feature = "ovr_settings")]
+    pub fn settings_mngr(&self) -> SettingsManager<'_> {
+        SettingsManager::new(self)
     }
 
     #[cfg(feature = "ovr_applications")]
@@ -169,6 +176,8 @@ impl TrackedDeviceIndex {
     //     self.0 == sys::k_unTrackedDeviceIndexOther
     // }
 }
+
+
 
 #[cfg(test)]
 mod tests {
