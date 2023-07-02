@@ -133,6 +133,30 @@ impl<'c> OverlayManager<'c> {
         EVROverlayError::new(err)
     }
 
+    pub fn sort_order(&mut self, overlay: OverlayHandle) -> Result<u32, EVROverlayError> {
+        let mut sort_order: u32 = 0;
+        let err = unsafe {
+            self.inner
+                .as_mut()
+                .GetOverlaySortOrder(overlay.0, &mut sort_order)
+        };
+        EVROverlayError::new(err)?;
+        Ok(sort_order)
+    }
+
+    pub fn set_sort_order(
+        &mut self,
+        overlay: OverlayHandle,
+        sort_order: u32,
+    ) -> Result<(), EVROverlayError> {
+        let err = unsafe {
+            self.inner
+                .as_mut()
+                .SetOverlaySortOrder(overlay.0, sort_order)
+        };
+        EVROverlayError::new(err)
+    }
+
     pub fn tint(&mut self, overlay: OverlayHandle) -> Result<ColorTint, EVROverlayError> {
         let mut tint = ColorTint::default();
         unsafe {
