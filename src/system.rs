@@ -63,10 +63,13 @@ impl<'ret> TrackedDeviceProperty<'ret> for String {
         let mut err = sys::ETrackedPropertyError::TrackedProp_Success;
         let res = unsafe {
             get_string(|ptr, n| {
-                system
-                    .inner
-                    .as_mut()
-                    .GetStringTrackedDeviceProperty(index.0, prop, ptr, n, &mut err)
+                system.inner.as_mut().GetStringTrackedDeviceProperty(
+                    index.0,
+                    prop.clone(),
+                    ptr,
+                    n,
+                    &mut err,
+                )
             })
         };
         ETrackedPropertyError::new(err)?;
@@ -108,18 +111,18 @@ impl<'ret> TrackedDeviceProperty<'ret> for CString {
         let len = unsafe {
             system.inner.as_mut().GetStringTrackedDeviceProperty(
                 index.0,
-                prop,
+                prop.clone(),
                 null_mut(),
                 0,
                 &mut err,
             )
         };
-        ETrackedPropertyError::new(err)?;
+        ETrackedPropertyError::new(err.clone())?;
         let mut data = vec![0; len as usize];
         let _len = unsafe {
             system.inner.as_mut().GetStringTrackedDeviceProperty(
                 index.0,
-                prop,
+                prop.clone(),
                 data.as_mut_ptr() as *mut i8,
                 len,
                 &mut err,
@@ -261,5 +264,11 @@ mod test {
                 sys::ETrackedDeviceProperty::Prop_DisplayGCImage_String,
             )
             .unwrap();
+    }
+}
+
+impl std::fmt::Debug for ETrackedPropertyError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ETrackedPropertyError").finish()
     }
 }
