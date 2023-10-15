@@ -272,4 +272,54 @@ impl<'c> InputManager<'c> {
         EVRInputError::new(err)?;
         Ok(OriginInfo(unsafe { data.assume_init() }))
     }
+
+    pub fn show_action_origins(
+        &mut self,
+        set: ActionSetHandle,
+        action: ActionHandle,
+    ) -> Result<()> {
+        let err = unsafe { self.inner.as_mut().ShowActionOrigins(set.0, action.0) };
+
+        EVRInputError::new(err)
+    }
+
+    pub fn show_bindings_for_action_set(
+        &mut self,
+        sets: &mut [ActiveActionSet],
+        origin: InputValueHandle,
+    ) -> Result<()> {
+        let err = unsafe {
+            self.inner.as_mut().ShowBindingsForActionSet(
+                sets.as_mut_ptr() as *mut sys::VRActiveActionSet_t,
+                std::mem::size_of::<sys::VRActiveActionSet_t>() as u32,
+                sets.len() as u32,
+                origin.0,
+            )
+        };
+
+        EVRInputError::new(err)
+    }
+
+    pub fn trigger_haptic_vibration_action(
+        &mut self,
+        action: ActionHandle,
+        start_seconds_from_now: f32,
+        duration: Duration,
+        frequency: f32,
+        amplitude: f32,
+        restrict: InputValueHandle,
+    ) -> Result<()> {
+        let err = unsafe {
+            self.inner.as_mut().TriggerHapticVibrationAction(
+                action.0,
+                start_seconds_from_now,
+                duration.as_secs_f32(),
+                frequency,
+                amplitude,
+                restrict.0,
+            )
+        };
+
+        EVRInputError::new(err)
+    }
 }
