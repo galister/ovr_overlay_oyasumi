@@ -16,7 +16,7 @@ pub struct InputManager<'c> {
 
 #[derive(From, Into, Debug, PartialEq, Eq, Clone, Copy)]
 #[repr(transparent)]
-pub struct ActionSetHandle(sys::VRActionSetHandle_t);
+pub struct ActionSetHandle(pub sys::VRActionSetHandle_t);
 
 #[derive(From, Into, Debug, PartialEq, Eq, Clone, Copy)]
 #[repr(transparent)]
