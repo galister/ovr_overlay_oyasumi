@@ -61,6 +61,7 @@ include_cpp! {
     generate_pod!("vr::TrackedDevicePose_t")
     generate_pod!("vr::InputPoseActionData_t")
     generate_pod!("vr::InputOriginInfo_t")
+    generate!("vr::k_ulInvalidInputValueHandle")
 
     // applications
     generate!("vr::IVRApplications")
