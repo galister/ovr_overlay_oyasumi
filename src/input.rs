@@ -24,7 +24,7 @@ pub struct ActionHandle(sys::VRActionHandle_t);
 
 #[derive(From, Into, Debug, PartialEq, Eq, Clone, Copy)]
 #[repr(transparent)]
-pub struct InputValueHandle(sys::VRInputValueHandle_t);
+pub struct InputValueHandle(pub sys::VRInputValueHandle_t);
 
 #[derive(From, Into /*, Debug, PartialEq, Eq, Clone, Copy*/)]
 #[repr(transparent)]
