@@ -322,4 +322,30 @@ impl<'c> InputManager<'c> {
 
         EVRInputError::new(err)
     }
+
+    pub fn open_binding_ui(
+        &mut self,
+        app_key: Option<&str>,
+        action_set: Option<ActionSetHandle>,
+        input_device: InputValueHandle,
+        show_on_desktop: bool,
+    ) -> Result<()> {
+        let app_key_cstr_ptr = app_key
+            .map(|s| CString::new(s).unwrap())
+            .map(|cstr| cstr.as_ptr())
+            .unwrap_or(std::ptr::null());
+        let action_set = match action_set {
+            Some(s) => s.0,
+            None => 0,
+        };
+        let err = unsafe {
+            self.inner.as_mut().OpenBindingUI(
+                app_key_cstr_ptr,
+                action_set,
+                input_device.0,
+                show_on_desktop,
+            )
+        };
+        EVRInputError::new(err)
+    }
 }
