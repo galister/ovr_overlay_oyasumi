@@ -232,28 +232,48 @@ impl<'c> InputManager<'c> {
 
     // ---- Action Origins ----
 
+    pub fn get_action_origins(
+        &mut self,
+        action_set: ActionSetHandle,
+        digital_action_handle: ActionHandle,
+    ) -> Result<[u64; 16]> {
+        let mut origins: [u64; 16] = unsafe { std::mem::zeroed() };
+        let err = unsafe {
+            self.inner.as_mut().GetActionOrigins(
+                action_set.0,
+                digital_action_handle.0,
+                origins.as_mut_ptr(),
+                16,
+            )
+        };
+        EVRInputError::new(err)?;
+        Ok(origins)
+    }
+
     pub fn get_origin_localized_name(
         &mut self,
         origin: InputValueHandle,
         bits: EnumSet<InputString>,
     ) -> Result<String> {
-        let mut name = vec![0u8; 100];
+        let mut name: [::std::os::raw::c_char; 128usize] = unsafe { ::std::mem::zeroed() };
+
         let err = unsafe {
             self.inner.as_mut().GetOriginLocalizedName(
                 origin.0,
                 name.as_mut_ptr() as *mut i8,
-                name.len() as u32 - 1, // TODO: is there *actually* an off-by-one here?
+                128,
                 bits.as_repr() as i32,
             )
         };
 
         EVRInputError::new(err)?;
-        Ok(CString::from_vec_with_nul(name)
-            .expect("There should be a null byte left!")
-            // This shouldn't copy
-            .into_string()
-            // This path should only copy once, and only if there is invalid utf8. wish there was an `into_string_lossy`.
-            .unwrap_or_else(|err| err.into_cstring().to_string_lossy().into_owned()))
+        let trimmed_str = name
+            .iter()
+            .map(|&c| c as u8)
+            .take_while(|&x| x != 0)
+            .collect();
+
+        Ok(String::from_utf8(trimmed_str).expect("Could not parse string from name array"))
     }
 
     pub fn get_origin_tracked_device_info(
@@ -347,5 +367,42 @@ impl<'c> InputManager<'c> {
             )
         };
         EVRInputError::new(err)
+    }
+
+    pub fn get_action_binding_info(
+        &mut self,
+        action: ActionHandle,
+    ) -> std::result::Result<Vec<sys::InputBindingInfo_t>, EVRInputError> {
+        let mut data: [sys::InputBindingInfo_t; 16] = unsafe { std::mem::zeroed() };
+        let mut count: MaybeUninit<u32> = MaybeUninit::uninit();
+
+        let err: sys::EVRInputError = unsafe {
+            self.inner.as_mut().GetActionBindingInfo(
+                action.0,
+                data.as_mut_ptr(),
+                std::mem::size_of::<sys::InputBindingInfo_t>() as u32,
+                16,
+                count.as_mut_ptr(),
+            )
+        };
+        let err = EVRInputError::new(err);
+        if let Err(err) = err {
+            return std::result::Result::Err(err);
+        };
+
+        let mut data_vec = vec![];
+
+        for i in 0..unsafe { count.assume_init() } {
+            let info = unsafe { data.get_unchecked(i as usize).clone() };
+            data_vec.push(sys::InputBindingInfo_t {
+                rchDevicePathName: info.rchDevicePathName,
+                rchInputPathName: info.rchInputPathName,
+                rchModeName: info.rchModeName,
+                rchSlotName: info.rchSlotName,
+                rchInputSourceType: info.rchInputSourceType,
+            });
+        }
+
+        std::result::Result::Ok(data_vec)
     }
 }
