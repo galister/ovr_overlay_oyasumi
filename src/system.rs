@@ -153,6 +153,17 @@ impl<'c> SystemManager<'c> {
         T::get(index, self, prop)
     }
 
+    pub fn get_controller_role_for_tracked_device_index<'ret, 'manager: 'ret>(
+        &'manager mut self,
+        index: TrackedDeviceIndex,
+    ) -> sys::ETrackedControllerRole {
+        unsafe {
+            self.inner
+                .as_mut()
+                .GetControllerRoleForTrackedDeviceIndex(index.0)
+        }
+    }
+
     pub fn get_tracked_device_class<'ret, 'manager: 'ret>(
         &'manager mut self,
         index: TrackedDeviceIndex,
