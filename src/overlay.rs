@@ -384,6 +384,10 @@ impl<'c> OverlayManager<'c> {
         };
         EVROverlayError::new(err)
     }
+
+    pub fn is_dashboard_visible(&mut self) -> bool {
+        unsafe { self.inner.as_mut().IsDashboardVisible() }
+    }
 }
 unsafe impl Send for OverlayManager<'_> {}
 unsafe impl Sync for OverlayManager<'_> {}
