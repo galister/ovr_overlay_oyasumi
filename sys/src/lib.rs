@@ -58,6 +58,7 @@ include_cpp! {
     generate_pod!("vr::VRInputValueHandle_t")
     generate_pod!("vr::VRActiveActionSet_t")
     generate_pod!("vr::InputDigitalActionData_t")
+    generate_pod!("vr::InputAnalogActionData_t")
     generate_pod!("vr::TrackedDevicePose_t")
     generate_pod!("vr::InputPoseActionData_t")
     generate_pod!("vr::InputOriginInfo_t")

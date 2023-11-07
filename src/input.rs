@@ -37,6 +37,10 @@ pub struct DigitalActionData(pub sys::InputDigitalActionData_t);
 
 #[derive(From, Into /*, Debug, PartialEq, Eq, Clone, Copy*/)]
 #[repr(transparent)]
+pub struct AnalogActionData(pub sys::InputAnalogActionData_t);
+
+#[derive(From, Into /*, Debug, PartialEq, Eq, Clone, Copy*/)]
+#[repr(transparent)]
 pub struct PoseActionData(pub sys::InputPoseActionData_t);
 
 #[derive(From, Into /*, Debug, PartialEq, Eq, Clone, Copy*/)]
@@ -205,6 +209,24 @@ impl<'c> InputManager<'c> {
         };
         EVRInputError::new(err)?;
         Ok(DigitalActionData(unsafe { data.assume_init() }))
+    }
+
+    pub fn get_analog_action_data(
+        &mut self,
+        action: ActionHandle,
+        restrict: InputValueHandle
+    ) -> Result<AnalogActionData> {
+        let mut data: MaybeUninit<sys::InputAnalogActionData_t> = MaybeUninit::uninit();
+        let err = unsafe {
+            self.inner.as_mut().GetAnalogActionData(
+                action.0,
+                data.as_mut_ptr(),
+                std::mem::size_of::<sys::InputAnalogActionData_t>() as u32,
+                restrict.0,
+            )
+        };
+        EVRInputError::new(err)?;
+        Ok(AnalogActionData(unsafe { data.assume_init() }))
     }
 
     pub fn get_pose_action_data_relative_to_now(
