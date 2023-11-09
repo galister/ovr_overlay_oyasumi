@@ -14,12 +14,14 @@ rust-version = "1.65" # GAT and if-else
 default = [
     "ovr_applications",
     "ovr_chaperone_setup",
+    "ovr_compositor",
     "ovr_input",
     "ovr_settings",
     "ovr_system",
 ]
 ovr_applications = []
 ovr_chaperone_setup = []
+ovr_compositor = []
 ovr_input = []
 ovr_system = []
 ovr_settings = []

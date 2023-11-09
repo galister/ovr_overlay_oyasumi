@@ -148,6 +148,45 @@ impl Display for EVRInputError {
     }
 }
 
+#[cfg(feature = "ovr_compositor")]
+#[derive(Into, Clone, PartialEq, Eq)]
+#[repr(transparent)]
+pub struct EVRCompositorError(sys::EVRCompositorError);
+
+#[cfg(feature = "ovr_compositor")]
+impl EVRCompositorError {
+    pub fn new(err: sys::EVRCompositorError) -> Result<(), Self> {
+        if err == sys::EVRCompositorError::VRCompositorError_None {
+            Ok(())
+        } else {
+            Err(Self(err))
+        }
+    }
+
+    pub fn description(&self) -> &'static str {
+        use sys::EVRCompositorError::*;
+        match self.0 {
+            VRCompositorError_None => "None",
+            VRCompositorError_RequestFailed => "RequestFailed",
+            VRCompositorError_IncompatibleVersion => "IncompatibleVersion",
+            VRCompositorError_DoNotHaveFocus => "DoNotHaveFocus",
+            VRCompositorError_InvalidTexture => "InvalidTexture",
+            VRCompositorError_IsNotSceneApplication => "IsNotSceneApplication",
+            VRCompositorError_TextureIsOnWrongDevice => "TextureIsOnWrongDevice",
+            VRCompositorError_TextureUsesUnsupportedFormat => "TextureUsesUnsupportedFormat",
+            VRCompositorError_SharedTexturesNotSupported => "SharedTexturesNotSupported",
+            VRCompositorError_IndexOutOfRange => "IndexOutOfRange",
+            VRCompositorError_AlreadySubmitted => "AlreadySubmitted",
+            VRCompositorError_AlreadySet => "AlreadySet",
+            VRCompositorError_InvalidBounds => "InvalidBounds",
+        }
+    }
+
+    pub fn inner(&self) -> sys::EVRCompositorError {
+        self.0.clone()
+    }
+}
+
 #[cfg(feature = "ovr_applications")]
 #[derive(Into, Clone, PartialEq, Eq)]
 #[repr(transparent)]

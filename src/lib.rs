@@ -13,6 +13,11 @@ pub mod chaperone_setup;
 #[cfg(feature = "ovr_chaperone_setup")]
 use self::chaperone_setup::ChaperoneSetupManager;
 
+#[cfg(feature = "ovr_compositor")]
+pub mod compositor;
+#[cfg(feature = "ovr_compositor")]
+use self::compositor::CompositorManager;
+
 #[cfg(feature = "ovr_input")]
 pub mod input;
 #[cfg(feature = "ovr_input")]
@@ -108,6 +113,11 @@ impl Context {
     pub fn applications_mngr(&self) -> ApplicationsManager<'_> {
         ApplicationsManager::new(self)
     }
+
+    #[cfg(feature = "ovr_compositor")]
+    pub fn compositor_mngr(&self) -> CompositorManager<'_> {
+        CompositorManager::new(self)
+    }
 }
 
 /// Tints each color channel by multiplying it with the given f32
@@ -176,8 +186,6 @@ impl TrackedDeviceIndex {
     //     self.0 == sys::k_unTrackedDeviceIndexOther
     // }
 }
-
-
 
 #[cfg(test)]
 mod tests {

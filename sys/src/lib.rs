@@ -71,6 +71,7 @@ include_cpp! {
     generate_pod!("vr::EVRApplicationError")
 
     //compositor
+    generate!("vr::VRVulkanTextureData_t")
     generate!("vr::IVRCompositor")
     generate!("vr::VRCompositor")
     generate_pod!("vr::EVRCompositorError")
