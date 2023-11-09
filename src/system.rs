@@ -189,6 +189,18 @@ impl<'c> SystemManager<'c> {
         poses
     }
 
+    pub fn get_time_since_last_vsync<'ret, 'manager: 'ret>(
+        &'manager mut self,
+        seconds_since_last_vsync: &mut f32,
+        frame_counter: &mut u64,
+    ) -> bool {
+        unsafe {
+            self.inner
+                .as_mut()
+                .GetTimeSinceLastVsync(seconds_since_last_vsync, frame_counter)
+        }
+    }
+
     pub fn poll_next_event<'ret, 'manager: 'ret>(&'manager mut self) -> Option<VREvent> {
         let mut event = std::mem::MaybeUninit::uninit();
         let res = unsafe {
