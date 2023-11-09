@@ -69,6 +69,11 @@ include_cpp! {
     generate!("vr::IVRApplications")
     generate!("vr::VRApplications")
     generate_pod!("vr::EVRApplicationError")
+
+    //compositor
+    generate!("vr::IVRCompositor")
+    generate!("vr::VRCompositor")
+    generate_pod!("vr::EVRCompositorError")
 }
 
 //pub use ffi::vr::*;
