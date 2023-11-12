@@ -4,8 +4,6 @@ use std::pin::Pin;
 
 use crate::{errors::EVRCompositorError, sys, Context};
 
-pub struct VkPhysicalDevice(u64);
-
 pub struct CompositorManager<'c> {
     ctx: PhantomData<&'c Context>,
     inner: Pin<&'c mut sys::IVRCompositor>,
@@ -73,12 +71,9 @@ impl<'c> CompositorManager<'c> {
         s.split(' ').map(|s| s.to_owned()).collect()
     }
 
-    pub fn get_vulkan_device_extensions_required(
-        &mut self,
-        device: &VkPhysicalDevice,
-    ) -> Vec<String> {
+    pub fn get_vulkan_device_extensions_required(&mut self, device: u64) -> Vec<String> {
         let mut buf = [0i8; 1024];
-        let mut handle = device.0;
+        let mut handle = device;
         unsafe {
             let len = self.inner.as_mut().GetVulkanDeviceExtensionsRequired(
                 (&mut handle) as *mut u64 as *mut _,
