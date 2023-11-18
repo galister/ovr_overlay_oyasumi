@@ -7,6 +7,9 @@ use crate::{sys, ColorTint, Context, TrackedDeviceIndex};
 use derive_more::From;
 use std::marker::PhantomData;
 use std::pin::Pin;
+use sys::glSharedTextureHandle_t;
+use sys::Texture_t;
+use sys::VRVulkanTextureData_t;
 
 pub struct OverlayManager<'c> {
     ctx: PhantomData<&'c Context>,
@@ -199,6 +202,42 @@ impl<'c> OverlayManager<'c> {
             self.inner
                 .as_mut()
                 .SetOverlayFromFile(overlay.0, img_path.as_ptr())
+        };
+        EVROverlayError::new(err)
+    }
+
+    pub fn set_image_opengl(
+        &mut self,
+        overlay: OverlayHandle,
+        texture: u32,
+    ) -> Result<(), EVROverlayError> {
+        let err = unsafe {
+            self.inner.as_mut().SetOverlayTexture(
+                overlay.0,
+                &sys::Texture_t {
+                    handle: texture as usize as _,
+                    eType: sys::ETextureType::TextureType_OpenGL,
+                    eColorSpace: sys::EColorSpace::ColorSpace_Auto,
+                },
+            )
+        };
+        EVROverlayError::new(err)
+    }
+
+    pub fn set_image_vulkan(
+        &mut self,
+        overlay: OverlayHandle,
+        texture: &mut VRVulkanTextureData_t,
+    ) -> Result<(), EVROverlayError> {
+        let err = unsafe {
+            self.inner.as_mut().SetOverlayTexture(
+                overlay.0,
+                &sys::Texture_t {
+                    handle: texture as *mut VRVulkanTextureData_t as _,
+                    eType: sys::ETextureType::TextureType_Vulkan,
+                    eColorSpace: sys::EColorSpace::ColorSpace_Auto,
+                },
+            )
         };
         EVROverlayError::new(err)
     }
