@@ -220,24 +220,27 @@ impl<'c> SystemManager<'c> {
 
 unsafe impl Send for SystemManager<'_> {}
 unsafe impl Sync for SystemManager<'_> {}
+
+const VREVENT_SIZE: usize = std::mem::size_of::<sys::VREvent_t>();
+
 pub struct VREvent {
     pub event_type: sys::EVREventType,
     pub tracked_device_index: TrackedDeviceIndex,
     pub event_age_seconds: f32,
-    pub data: [u8; 52],
+    pub data: [u8; VREVENT_SIZE - 12],
 }
 
 impl VREvent {
     fn parse(event: sys::VREvent_t) -> VREvent {
-        let bytes: [u8; 64] = unsafe {
+        let bytes: [u8; VREVENT_SIZE] = unsafe {
             *std::slice::from_raw_parts(
                 &event as *const sys::VREvent_t as *const u8,
                 std::mem::size_of::<sys::VREvent_t>(),
             )
             .as_array()
         };
-        let data = &bytes[12..64];
-        let mut data_slice: [u8; 52] = [0; 52];
+        let data = &bytes[12..VREVENT_SIZE];
+        let mut data_slice: [u8; VREVENT_SIZE - 12] = [0; VREVENT_SIZE - 12];
         data_slice.copy_from_slice(data);
         unsafe {
             VREvent {
