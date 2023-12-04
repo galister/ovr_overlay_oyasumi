@@ -73,10 +73,9 @@ impl<'c> CompositorManager<'c> {
 
     pub fn get_vulkan_device_extensions_required(&mut self, device: u64) -> Vec<String> {
         let mut buf = [0i8; 1024];
-        let mut handle = device;
         unsafe {
             let len = self.inner.as_mut().GetVulkanDeviceExtensionsRequired(
-                (&mut handle) as *mut u64 as *mut _,
+                device as usize as _,
                 buf.as_mut_ptr(),
                 buf.len() as u32,
             );
