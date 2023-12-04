@@ -7,8 +7,6 @@ use crate::{sys, ColorTint, Context, TrackedDeviceIndex};
 use derive_more::From;
 use std::marker::PhantomData;
 use std::pin::Pin;
-use sys::glSharedTextureHandle_t;
-use sys::Texture_t;
 use sys::VRVulkanTextureData_t;
 
 pub struct OverlayManager<'c> {
