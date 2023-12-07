@@ -214,7 +214,7 @@ impl<'c> InputManager<'c> {
     pub fn get_analog_action_data(
         &mut self,
         action: ActionHandle,
-        restrict: InputValueHandle
+        restrict: InputValueHandle,
     ) -> Result<AnalogActionData> {
         let mut data: MaybeUninit<sys::InputAnalogActionData_t> = MaybeUninit::uninit();
         let err = unsafe {
@@ -415,7 +415,7 @@ impl<'c> InputManager<'c> {
         let mut data_vec = vec![];
 
         for i in 0..unsafe { count.assume_init() } {
-            let info = unsafe { data.get_unchecked(i as usize).clone() };
+            let info = unsafe { data.get_unchecked(i as usize) };
             data_vec.push(sys::InputBindingInfo_t {
                 rchDevicePathName: info.rchDevicePathName,
                 rchInputPathName: info.rchInputPathName,

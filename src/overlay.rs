@@ -231,7 +231,7 @@ impl<'c> OverlayManager<'c> {
             self.inner.as_mut().SetOverlayTexture(
                 overlay.0,
                 &sys::Texture_t {
-                    handle: texture as *mut VRVulkanTextureData_t as _,
+                    handle: texture as *mut VRVulkanTextureData_t as *mut _,
                     eType: sys::ETextureType::TextureType_Vulkan,
                     eColorSpace: sys::EColorSpace::ColorSpace_Auto,
                 },
