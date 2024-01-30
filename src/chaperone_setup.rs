@@ -1,7 +1,10 @@
+use sys::HmdMatrix34_t;
+
 use crate::{sys, Context};
 
 use std::ffi::CString;
 use std::marker::PhantomData;
+use std::mem::MaybeUninit;
 use std::pin::Pin;
 use std::ptr::null_mut;
 
@@ -39,5 +42,31 @@ impl<'c> ChaperoneSetupManager<'c> {
         } else {
             None
         }
+    }
+
+    pub fn get_working_standing_zero_pose_to_raw_tracking_pose(&mut self) -> Option<HmdMatrix34_t> {
+        let mut pose = MaybeUninit::uninit();
+        let success = unsafe {
+            self.inner
+                .as_mut()
+                .GetWorkingStandingZeroPoseToRawTrackingPose(pose.as_mut_ptr())
+        };
+        if success {
+            Some(unsafe { pose.assume_init() })
+        } else {
+            None
+        }
+    }
+
+    pub fn set_working_standing_zero_pose_to_raw_tracking_pose(&mut self, mat: &HmdMatrix34_t) {
+        unsafe {
+            self.inner
+                .as_mut()
+                .SetWorkingStandingZeroPoseToRawTrackingPose(mat)
+        }
+    }
+
+    pub fn commit_working_copy(&mut self, config: sys::EChaperoneConfigFile) -> bool {
+        unsafe { self.inner.as_mut().CommitWorkingCopy(config) }
     }
 }
