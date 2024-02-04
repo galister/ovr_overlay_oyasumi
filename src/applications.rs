@@ -77,4 +77,20 @@ impl<'c> ApplicationsManager<'c> {
 
         Ok(installed)
     }
+
+    pub fn set_application_auto_launch(&mut self, key: &str, auto_launch: bool) -> Result<()> {
+        let key_raw = if let Ok(s) = CString::new(key) {
+            s
+        } else {
+            return EVRApplicationError::new(
+                sys::EVRApplicationError::VRApplicationError_InvalidParameter,
+            );
+        };
+        let err = unsafe {
+            self.inner
+                .as_mut()
+                .SetApplicationAutoLaunch(key_raw.as_ptr(), auto_launch)
+        };
+        EVRApplicationError::new(err)
+    }
 }
