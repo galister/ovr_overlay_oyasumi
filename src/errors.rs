@@ -45,7 +45,33 @@ impl EVROverlayError {
     }
 
     pub fn description(&self) -> &'static str {
-        "todo"
+        use sys::EVROverlayError::*;
+        match self.0 {
+            VROverlayError_None => "None",
+            VROverlayError_UnknownOverlay => "UnknownOverlay",
+            VROverlayError_InvalidHandle => "InvalidHandle",
+            VROverlayError_PermissionDenied => "PermissionDenied",
+            VROverlayError_OverlayLimitExceeded => "OverlayLimitExceeded",
+            VROverlayError_WrongVisibilityType => "WrongVisibilityType",
+            VROverlayError_KeyTooLong => "KeyTooLong",
+            VROverlayError_NameTooLong => "NameTooLong",
+            VROverlayError_KeyInUse => "KeyInUse",
+            VROverlayError_WrongTransformType => "WrongTransformType",
+            VROverlayError_InvalidTrackedDevice => "InvalidTrackedDevice",
+            VROverlayError_InvalidParameter => "InvalidParameter",
+            VROverlayError_ThumbnailCantBeDestroyed => "ThumbnailCantBeDestroyed",
+            VROverlayError_ArrayTooSmall => "ArrayTooSmall",
+            VROverlayError_RequestFailed => "RequestFailed",
+            VROverlayError_InvalidTexture => "InvalidTexture",
+            VROverlayError_UnableToLoadFile => "UnableToLoadFile",
+            VROverlayError_KeyboardAlreadyInUse => "KeyboardAlreadyInUse",
+            VROverlayError_NoNeighbor => "NoNeighbor",
+            VROverlayError_TooManyMaskPrimitives => "TooManyMaskPrimitives",
+            VROverlayError_BadMaskPrimitive => "BadMaskPrimitive",
+            VROverlayError_TextureAlreadyLocked => "TextureAlreadyLocked",
+            VROverlayError_TextureNotLocked => "TextureNotLocked",
+            VROverlayError_TextureLockCapacityReached => "TextureLockCapacityReached",
+        }
     }
 
     pub fn inner(&self) -> sys::EVROverlayError {
@@ -76,7 +102,25 @@ impl ETrackedPropertyError {
     }
 
     pub fn description(&self) -> &'static str {
-        "todo"
+        use sys::ETrackedPropertyError::*;
+        match self.0 {
+            TrackedProp_Success => "Success",
+            TrackedProp_WrongDataType => "WrongDataType",
+            TrackedProp_WrongDeviceClass => "WrongDeviceClass",
+            TrackedProp_BufferTooSmall => "BufferTooSmall",
+            TrackedProp_UnknownProperty => "UnknownProperty",
+            TrackedProp_InvalidDevice => "InvalidDevice",
+            TrackedProp_CouldNotContactServer => "CouldNotContactServer",
+            TrackedProp_ValueNotProvidedByDevice => "ValueNotProvidedByDevice",
+            TrackedProp_StringExceedsMaximumLength => "StringExceedsMaximumLength",
+            TrackedProp_NotYetAvailable => "NotYetAvailable",
+            TrackedProp_PermissionDenied => "PermissionDenied",
+            TrackedProp_InvalidOperation => "InvalidOperation",
+            TrackedProp_CannotWriteToWildcards => "CannotWriteToWildcards",
+            TrackedProp_IPCReadFailure => "IPCReadFailure",
+            TrackedProp_OutOfMemory => "OutOfMemory",
+            TrackedProp_InvalidContainer => "InvalidContainer",
+        }
     }
 
     pub fn inner(&self) -> sys::ETrackedPropertyError {
