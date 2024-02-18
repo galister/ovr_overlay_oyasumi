@@ -38,7 +38,7 @@ pub mod applications;
 #[cfg(feature = "ovr_applications")]
 use self::applications::ApplicationsManager;
 
-mod errors;
+pub mod errors;
 
 pub use self::errors::{EVRInitError, InitError};
 pub use ovr_overlay_sys as sys;
