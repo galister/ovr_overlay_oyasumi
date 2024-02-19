@@ -171,22 +171,11 @@ impl<'c> SystemManager<'c> {
         unsafe { self.inner.as_mut().GetTrackedDeviceClass(index.0) }
     }
 
-    pub fn get_sorted_tracked_device_indices_of_class<'ret, 'manager: 'ret>(
+    pub fn is_tracked_device_connected<'ret, 'manager: 'ret>(
         &'manager mut self,
-        class: sys::ETrackedDeviceClass,
-        relative_to_index: TrackedDeviceIndex,
-    ) -> Vec<TrackedDeviceIndex> {
-        let mut device_ids = Vec::with_capacity(64);
-        unsafe {
-            let num_ids = self.inner.as_mut().GetSortedTrackedDeviceIndicesOfClass(
-                class,
-                device_ids.as_mut_ptr() as *mut _,
-                device_ids.len() as u32,
-                relative_to_index.0,
-            );
-            device_ids.set_len(num_ids as usize);
-        }
-        device_ids
+        index: TrackedDeviceIndex,
+    ) -> bool {
+        unsafe { self.inner.as_mut().IsTrackedDeviceConnected(index.0) }
     }
 
     pub fn get_device_to_absolute_tracking_pose<'ret, 'manager: 'ret>(
