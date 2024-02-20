@@ -40,6 +40,11 @@ impl<'c> OverlayManager<'c> {
         Ok(OverlayHandle(handle))
     }
 
+    pub fn destroy_overlay(&mut self, overlay: OverlayHandle) -> Result<(), EVROverlayError> {
+        let err = unsafe { self.inner.as_mut().DestroyOverlay(overlay.0) };
+        EVROverlayError::new(err)
+    }
+
     pub fn set_visibility(
         &mut self,
         overlay: OverlayHandle,
