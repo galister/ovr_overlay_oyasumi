@@ -1,6 +1,6 @@
 use byteorder::ByteOrder;
 use slice_of_array::SliceArrayExt;
-use sys::ETrackingUniverseOrigin;
+use sys::{ETrackingUniverseOrigin, HmdMatrix34_t};
 
 use crate::errors::ETrackedPropertyError;
 use crate::{sys, Context, TrackedDeviceIndex};
@@ -194,6 +194,16 @@ impl<'c> SystemManager<'c> {
             )
         };
         poses
+    }
+
+    pub fn get_raw_zero_pose_to_standing_absolute_tracking_pose<'ret, 'manager: 'ret>(
+        &'manager mut self,
+    ) -> HmdMatrix34_t {
+        unsafe {
+            self.inner
+                .as_mut()
+                .GetRawZeroPoseToStandingAbsoluteTrackingPose()
+        }
     }
 
     pub fn get_time_since_last_vsync<'ret, 'manager: 'ret>(
