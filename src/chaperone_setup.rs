@@ -58,6 +58,20 @@ impl<'c> ChaperoneSetupManager<'c> {
         }
     }
 
+    pub fn get_working_seated_zero_pose_to_raw_tracking_pose(&mut self) -> Option<HmdMatrix34_t> {
+        let mut pose = MaybeUninit::uninit();
+        let success = unsafe {
+            self.inner
+                .as_mut()
+                .GetWorkingSeatedZeroPoseToRawTrackingPose(pose.as_mut_ptr())
+        };
+        if success {
+            Some(unsafe { pose.assume_init() })
+        } else {
+            None
+        }
+    }
+
     pub fn set_working_standing_zero_pose_to_raw_tracking_pose(&mut self, mat: &HmdMatrix34_t) {
         unsafe {
             self.inner
@@ -66,7 +80,19 @@ impl<'c> ChaperoneSetupManager<'c> {
         }
     }
 
+    pub fn set_working_seated_zero_pose_to_raw_tracking_pose(&mut self, mat: &HmdMatrix34_t) {
+        unsafe {
+            self.inner
+                .as_mut()
+                .SetWorkingSeatedZeroPoseToRawTrackingPose(mat)
+        }
+    }
+
     pub fn commit_working_copy(&mut self, config: sys::EChaperoneConfigFile) -> bool {
         unsafe { self.inner.as_mut().CommitWorkingCopy(config) }
+    }
+
+    pub fn revert_working_copy(&mut self) {
+        unsafe { self.inner.as_mut().RevertWorkingCopy() }
     }
 }
