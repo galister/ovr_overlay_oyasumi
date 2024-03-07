@@ -430,6 +430,11 @@ impl<'c> OverlayManager<'c> {
     pub fn is_dashboard_visible(&mut self) -> bool {
         unsafe { self.inner.as_mut().IsDashboardVisible() }
     }
+
+    pub fn wait_frame_sync(&mut self, timeout_ms: u32) -> Result<(), EVROverlayError> {
+        let err = unsafe { self.inner.as_mut().WaitFrameSync(timeout_ms) };
+        EVROverlayError::new(err)
+    }
 }
 unsafe impl Send for OverlayManager<'_> {}
 unsafe impl Sync for OverlayManager<'_> {}

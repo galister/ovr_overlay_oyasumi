@@ -71,6 +71,7 @@ impl EVROverlayError {
             VROverlayError_TextureAlreadyLocked => "TextureAlreadyLocked",
             VROverlayError_TextureNotLocked => "TextureNotLocked",
             VROverlayError_TextureLockCapacityReached => "TextureLockCapacityReached",
+            VROverlayError_TimedOut => "TimedOut",
         }
     }
 
