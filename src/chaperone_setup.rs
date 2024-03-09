@@ -88,6 +88,28 @@ impl<'c> ChaperoneSetupManager<'c> {
         }
     }
 
+    pub fn get_live_collision_bounds_info(&mut self) -> Vec<HmdQuad_t> {
+        let mut num_quads = 0u32;
+        let success = unsafe {
+            self.inner
+                .as_mut()
+                .GetLiveCollisionBoundsInfo(ptr::null_mut(), &mut num_quads)
+        };
+        if !success {
+            return vec![];
+        }
+        let mut quads: Vec<HmdQuad_t> = Vec::with_capacity(num_quads as usize);
+        let success = unsafe {
+            self.inner
+                .as_mut()
+                .GetLiveCollisionBoundsInfo(quads.as_mut_ptr(), &mut num_quads)
+        };
+        if !success {
+            return vec![];
+        }
+        quads
+    }
+
     pub fn get_working_collision_bounds_info(&mut self) -> Vec<HmdQuad_t> {
         let mut num_quads = 0u32;
         let success = unsafe {
@@ -118,11 +140,56 @@ impl<'c> ChaperoneSetupManager<'c> {
         }
     }
 
+    pub fn get_working_play_area_size(&mut self) -> Option<(f32, f32)> {
+        let mut size_x = MaybeUninit::uninit();
+        let mut size_y = MaybeUninit::uninit();
+        let success = unsafe {
+            self.inner
+                .as_mut()
+                .GetWorkingPlayAreaSize(size_x.as_mut_ptr(), size_y.as_mut_ptr())
+        };
+        if success {
+            Some(unsafe { (size_x.assume_init(), size_y.assume_init()) })
+        } else {
+            None
+        }
+    }
+
+    pub fn set_working_play_area_size(&mut self, size_x: f32, size_y: f32) {
+        unsafe { self.inner.as_mut().SetWorkingPlayAreaSize(size_x, size_y) }
+    }
+
+    pub fn get_working_play_area_rect(&mut self) -> Option<HmdQuad_t> {
+        let mut rect = MaybeUninit::uninit();
+        let success = unsafe {
+            self.inner
+                .as_mut()
+                .GetWorkingPlayAreaRect(rect.as_mut_ptr())
+        };
+        if success {
+            Some(unsafe { rect.assume_init() })
+        } else {
+            None
+        }
+    }
+
     pub fn commit_working_copy(&mut self, config: sys::EChaperoneConfigFile) -> bool {
         unsafe { self.inner.as_mut().CommitWorkingCopy(config) }
     }
 
     pub fn revert_working_copy(&mut self) {
         unsafe { self.inner.as_mut().RevertWorkingCopy() }
+    }
+
+    pub fn reload_from_disk(&mut self, config: sys::EChaperoneConfigFile) {
+        unsafe { self.inner.as_mut().ReloadFromDisk(config) }
+    }
+
+    pub fn show_working_set_preview(&mut self) {
+        unsafe { self.inner.as_mut().ShowWorkingSetPreview() }
+    }
+
+    pub fn hide_working_set_preview(&mut self) {
+        unsafe { self.inner.as_mut().HideWorkingSetPreview() }
     }
 }
