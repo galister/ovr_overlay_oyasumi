@@ -1,4 +1,4 @@
-use sys::HmdMatrix34_t;
+use sys::{HmdMatrix34_t, HmdQuad_t};
 
 use crate::{sys, Context};
 
@@ -6,7 +6,7 @@ use std::ffi::CString;
 use std::marker::PhantomData;
 use std::mem::MaybeUninit;
 use std::pin::Pin;
-use std::ptr::null_mut;
+use std::ptr::{self, null_mut};
 
 pub struct ChaperoneSetupManager<'c> {
     ctx: PhantomData<&'c Context>,
@@ -85,6 +85,36 @@ impl<'c> ChaperoneSetupManager<'c> {
             self.inner
                 .as_mut()
                 .SetWorkingSeatedZeroPoseToRawTrackingPose(mat)
+        }
+    }
+
+    pub fn get_working_collision_bounds_info(&mut self) -> Vec<HmdQuad_t> {
+        let mut num_quads = 0u32;
+        let success = unsafe {
+            self.inner
+                .as_mut()
+                .GetWorkingCollisionBoundsInfo(ptr::null_mut(), &mut num_quads)
+        };
+        if !success {
+            return vec![];
+        }
+        let mut quads: Vec<HmdQuad_t> = Vec::with_capacity(num_quads as usize);
+        let success = unsafe {
+            self.inner
+                .as_mut()
+                .GetWorkingCollisionBoundsInfo(quads.as_mut_ptr(), &mut num_quads)
+        };
+        if !success {
+            return vec![];
+        }
+        quads
+    }
+
+    pub fn set_working_collision_bounds_info(&mut self, quads: &mut [HmdQuad_t]) {
+        unsafe {
+            self.inner
+                .as_mut()
+                .SetWorkingCollisionBoundsInfo(quads.as_mut_ptr(), quads.len() as _)
         }
     }
 

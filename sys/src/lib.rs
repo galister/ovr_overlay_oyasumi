@@ -48,6 +48,7 @@ include_cpp! {
     generate!("vr::HmdMatrix34_t")
     generate_pod!("vr::HmdVector3_t")
     generate_pod!("vr::HmdQuaternion_t")
+    generate_pod!("vr::HmdQuad_t")
 
     generate_pod!("vr::VRTextureBounds_t")
 
