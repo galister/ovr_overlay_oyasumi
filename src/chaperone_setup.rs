@@ -1,4 +1,4 @@
-use sys::{HmdMatrix34_t, HmdQuad_t};
+use sys::{HmdMatrix34_t, HmdQuad_t, HmdVector2_t};
 
 use crate::{sys, Context};
 
@@ -170,6 +170,14 @@ impl<'c> ChaperoneSetupManager<'c> {
             Some(unsafe { rect.assume_init() })
         } else {
             None
+        }
+    }
+
+    pub fn set_working_perimeter(&mut self, points: &mut [HmdVector2_t]) {
+        unsafe {
+            self.inner
+                .as_mut()
+                .SetWorkingPerimeter(points.as_mut_ptr(), points.len() as _)
         }
     }
 

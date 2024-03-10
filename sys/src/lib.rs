@@ -47,6 +47,7 @@ include_cpp! {
     generate_pod!("vr::ETrackingUniverseOrigin")
     generate!("vr::HmdMatrix34_t")
     generate_pod!("vr::HmdVector3_t")
+    generate_pod!("vr::HmdVector2_t")
     generate_pod!("vr::HmdQuaternion_t")
     generate_pod!("vr::HmdQuad_t")
 
