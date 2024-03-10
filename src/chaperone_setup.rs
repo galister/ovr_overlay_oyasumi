@@ -90,12 +90,12 @@ impl<'c> ChaperoneSetupManager<'c> {
 
     pub fn get_live_collision_bounds_info(&mut self) -> Vec<HmdQuad_t> {
         let mut num_quads = 0u32;
-        let success = unsafe {
+        unsafe {
             self.inner
                 .as_mut()
                 .GetLiveCollisionBoundsInfo(ptr::null_mut(), &mut num_quads)
         };
-        if !success {
+        if num_quads == 0 {
             return vec![];
         }
         let mut quads: Vec<HmdQuad_t> = Vec::with_capacity(num_quads as usize);
@@ -104,20 +104,20 @@ impl<'c> ChaperoneSetupManager<'c> {
                 .as_mut()
                 .GetLiveCollisionBoundsInfo(quads.as_mut_ptr(), &mut num_quads)
         };
-        if !success {
-            return vec![];
+        if success {
+            unsafe { quads.set_len(num_quads as usize) };
         }
         quads
     }
 
     pub fn get_working_collision_bounds_info(&mut self) -> Vec<HmdQuad_t> {
         let mut num_quads = 0u32;
-        let success = unsafe {
+        unsafe {
             self.inner
                 .as_mut()
                 .GetWorkingCollisionBoundsInfo(ptr::null_mut(), &mut num_quads)
         };
-        if !success {
+        if num_quads == 0 {
             return vec![];
         }
         let mut quads: Vec<HmdQuad_t> = Vec::with_capacity(num_quads as usize);
@@ -126,8 +126,8 @@ impl<'c> ChaperoneSetupManager<'c> {
                 .as_mut()
                 .GetWorkingCollisionBoundsInfo(quads.as_mut_ptr(), &mut num_quads)
         };
-        if !success {
-            return vec![];
+        if success {
+            unsafe { quads.set_len(num_quads as usize) };
         }
         quads
     }
