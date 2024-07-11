@@ -31,7 +31,7 @@ lazy_static = "1"
 thiserror = "1"
 derive_more = "0.99"
 log = "0.4"
-nalgebra = { version = "0.30", optional = true }
+nalgebra = { version = "0.33", optional = true }
 slice-of-array = "0.3"
 enumset = "1.0.12"
 byteorder = "1.4.3"
