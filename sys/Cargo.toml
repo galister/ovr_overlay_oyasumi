@@ -30,3 +30,4 @@ cxx = "1"
 [build-dependencies]
 autocxx-build = "0.27"
 normpath = "1.2.0"
+pkg-config = "0.3.31"
