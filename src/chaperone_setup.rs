@@ -5,6 +5,7 @@ use crate::{sys, Context};
 use std::ffi::CString;
 use std::marker::PhantomData;
 use std::mem::MaybeUninit;
+use std::os::raw::c_char;
 use std::pin::Pin;
 use std::ptr::{self, null_mut};
 
@@ -35,7 +36,7 @@ impl<'c> ChaperoneSetupManager<'c> {
         let res = unsafe {
             self.inner
                 .as_mut()
-                .ExportLiveToBuffer(data.as_mut_ptr() as *mut i8, &mut len)
+                .ExportLiveToBuffer(data.as_mut_ptr() as *mut c_char, &mut len)
         };
         if res {
             CString::from_vec_with_nul(data).ok()

@@ -7,6 +7,7 @@ use crate::{sys, Context, TrackedDeviceIndex};
 
 use std::ffi::CString;
 use std::marker::PhantomData;
+use std::os::raw::c_char;
 use std::pin::Pin;
 use std::ptr::null_mut;
 
@@ -123,7 +124,7 @@ impl<'ret> TrackedDeviceProperty<'ret> for CString {
             system.inner.as_mut().GetStringTrackedDeviceProperty(
                 index.0,
                 prop.clone(),
-                data.as_mut_ptr() as *mut i8,
+                data.as_mut_ptr() as *mut c_char,
                 len,
                 &mut err,
             )
