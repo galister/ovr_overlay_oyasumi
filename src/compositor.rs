@@ -1,6 +1,6 @@
-use std::ffi::CStr;
 use std::marker::PhantomData;
 use std::pin::Pin;
+use std::{ffi::CStr, os::raw::c_char};
 
 use crate::{errors::EVRCompositorError, sys, Context};
 
@@ -57,7 +57,7 @@ impl<'c> CompositorManager<'c> {
     }
 
     pub fn get_vulkan_instance_extensions_required(&mut self) -> Vec<String> {
-        let mut buf = [0i8; 1024];
+        let mut buf: [c_char; 1024] = [0; 1024];
         let len = unsafe {
             self.inner
                 .as_mut()
@@ -72,7 +72,7 @@ impl<'c> CompositorManager<'c> {
     }
 
     pub fn get_vulkan_device_extensions_required(&mut self, device: u64) -> Vec<String> {
-        let mut buf = [0i8; 1024];
+        let mut buf: [c_char; 1024] = [0; 1024];
         unsafe {
             let len = self.inner.as_mut().GetVulkanDeviceExtensionsRequired(
                 device as usize as _,

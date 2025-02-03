@@ -282,7 +282,7 @@ impl<'c> InputManager<'c> {
         let err = unsafe {
             self.inner.as_mut().GetOriginLocalizedName(
                 origin.0,
-                name.as_mut_ptr() as *mut i8,
+                name.as_mut_ptr(),
                 128,
                 bits.as_repr() as i32,
             )
