@@ -23,6 +23,8 @@ fn main() {
     let input_files = [relative("openvr/bin/linux64/libopenvr_api.so")];
     #[cfg(all(target_os = "linux", target_arch = "x86"))]
     let input_files = [relative("openvr/bin/linux32/libopenvr_api.so")];
+    #[cfg(all(target_os = "linux", target_arch = "aarch64"))]
+    let input_files = [relative("openvr/bin/linuxarm64/libopenvr_api.so")];
     #[cfg(target_os = "macos")]
     let input_files: [PathBuf; 1] = [panic!("Mac is unsupported")];
 
