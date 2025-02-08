@@ -41,7 +41,7 @@ include_cpp! {
     generate!("vr::IVRChaperoneSetup")
     generate!("vr::VRChaperoneSetup")
 
-    generate!("vr::VR_GetVRInitErrorAsSymbol")
+    // generate!("vr::VR_GetVRInitErrorAsSymbol")
     generate_pod!("vr::EVRInitError")
 
     generate_pod!("vr::ETrackingUniverseOrigin")
