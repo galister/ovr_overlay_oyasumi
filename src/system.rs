@@ -248,7 +248,7 @@ pub struct VREvent {
 }
 
 impl VREvent {
-    fn parse(event: sys::VREvent_t) -> VREvent {
+    fn parse(event: sys::VREvent_t) -> Option<VREvent> {
         let bytes: [u8; VREVENT_SIZE] = unsafe {
             *std::slice::from_raw_parts(
                 &event as *const sys::VREvent_t as *const u8,
@@ -259,16 +259,16 @@ impl VREvent {
         let data = &bytes[12..VREVENT_SIZE];
         let mut data_slice: [u8; VREVENT_SIZE - 12] = [0; VREVENT_SIZE - 12];
         data_slice.copy_from_slice(data);
-        unsafe {
-            VREvent {
-                event_type: std::mem::transmute(byteorder::LittleEndian::read_u32(&bytes[0..4])),
-                tracked_device_index: TrackedDeviceIndex(byteorder::LittleEndian::read_u32(
-                    &bytes[4..8],
-                )),
-                event_age_seconds: byteorder::LittleEndian::read_f32(&bytes[8..12]),
-                data: data_slice,
-            }
-        }
+
+        let event_type = byteorder::LittleEndian::read_u32(&bytes[0..4]);
+        Ok(VREvent {
+            event_type: event_type.try_into().ok()?,
+            tracked_device_index: TrackedDeviceIndex(byteorder::LittleEndian::read_u32(
+                &bytes[4..8],
+            )),
+            event_age_seconds: byteorder::LittleEndian::read_f32(&bytes[8..12]),
+            data: data_slice,
+        })
     }
 }
 
