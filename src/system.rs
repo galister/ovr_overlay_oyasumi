@@ -231,7 +231,7 @@ impl<'c> SystemManager<'c> {
         }
         let event = unsafe { event.assume_init() };
         let event = VREvent::parse(event);
-        Some(event)
+        Some(event?)
     }
 }
 
@@ -241,7 +241,7 @@ unsafe impl Sync for SystemManager<'_> {}
 const VREVENT_SIZE: usize = std::mem::size_of::<sys::VREvent_t>();
 
 pub struct VREvent {
-    pub event_type: sys::EVREventType,
+    pub event_type: u32,
     pub tracked_device_index: TrackedDeviceIndex,
     pub event_age_seconds: f32,
     pub data: [u8; VREVENT_SIZE - 12],
@@ -260,9 +260,8 @@ impl VREvent {
         let mut data_slice: [u8; VREVENT_SIZE - 12] = [0; VREVENT_SIZE - 12];
         data_slice.copy_from_slice(data);
 
-        let event_type = byteorder::LittleEndian::read_u32(&bytes[0..4]);
-        Ok(VREvent {
-            event_type: event_type.try_into().ok()?,
+        Some(VREvent {
+            event_type: byteorder::LittleEndian::read_u32(&bytes[0..4]),
             tracked_device_index: TrackedDeviceIndex(byteorder::LittleEndian::read_u32(
                 &bytes[4..8],
             )),
