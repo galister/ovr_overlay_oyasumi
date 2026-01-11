@@ -5,7 +5,7 @@ use sys::{ETrackingUniverseOrigin, HmdMatrix34_t};
 use crate::errors::ETrackedPropertyError;
 use crate::{sys, Context, TrackedDeviceIndex};
 
-use std::ffi::CString;
+use std::ffi::{c_char, CString};
 use std::marker::PhantomData;
 use std::pin::Pin;
 use std::ptr::null_mut;
@@ -123,7 +123,7 @@ impl<'ret> TrackedDeviceProperty<'ret> for CString {
             system.inner.as_mut().GetStringTrackedDeviceProperty(
                 index.0,
                 prop.clone(),
-                data.as_mut_ptr() as *mut i8,
+                data.as_mut_ptr() as *mut c_char,
                 len,
                 &mut err,
             )
