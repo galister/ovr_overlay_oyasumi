@@ -52,6 +52,7 @@ fn main() {
         include_paths = vec![relative("openvr/headers")];
 
         // Link the C++ libraries
+        // platform names can be found in https://github.com/ValveSoftware/openvr/blob/91825305130f446f82054c1ec3d416321ace0072/src/vrcore/pathtools_public.h#L131-L160
         #[cfg(target_os = "windows")]
         let input_files = [
             relative("openvr/bin/win64/openvr_api.dll"),
@@ -61,6 +62,8 @@ fn main() {
         let input_files = [relative("openvr/bin/linux64/libopenvr_api.so")];
         #[cfg(all(target_os = "linux", target_arch = "x86"))]
         let input_files = [relative("openvr/bin/linux32/libopenvr_api.so")];
+        #[cfg(all(target_os = "linux", target_arch = "aarch64"))]
+        let input_files = [relative("openvr/bin/linuxarm64/libopenvr_api.so")];
         #[cfg(target_os = "macos")]
         let input_files: [PathBuf; 1] = [panic!("Mac is unsupported")];
 

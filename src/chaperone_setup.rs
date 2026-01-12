@@ -2,7 +2,7 @@ use sys::{HmdMatrix34_t, HmdQuad_t, HmdVector2_t};
 
 use crate::{sys, Context};
 
-use std::ffi::CString;
+use std::ffi::{c_char, CString};
 use std::marker::PhantomData;
 use std::mem::MaybeUninit;
 use std::pin::Pin;
@@ -35,7 +35,7 @@ impl<'c> ChaperoneSetupManager<'c> {
         let res = unsafe {
             self.inner
                 .as_mut()
-                .ExportLiveToBuffer(data.as_mut_ptr() as *mut i8, &mut len)
+                .ExportLiveToBuffer(data.as_mut_ptr() as *mut c_char, &mut len)
         };
         if res {
             CString::from_vec_with_nul(data).ok()

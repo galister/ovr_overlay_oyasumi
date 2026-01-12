@@ -2,7 +2,7 @@ use crate::{errors::EVRInputError, pose, sys, Context};
 
 use derive_more::{From, Into};
 use enumset::{EnumSet, EnumSetType};
-use std::ffi::{CStr, CString};
+use std::ffi::{c_char, CStr, CString};
 use std::marker::PhantomData;
 use std::mem::MaybeUninit;
 use std::path::Path;
@@ -282,7 +282,7 @@ impl<'c> InputManager<'c> {
         let err = unsafe {
             self.inner.as_mut().GetOriginLocalizedName(
                 origin.0,
-                name.as_mut_ptr() as *mut i8,
+                name.as_mut_ptr() as *mut c_char,
                 128,
                 bits.as_repr() as i32,
             )
