@@ -1,5 +1,4 @@
 use byteorder::ByteOrder;
-use slice_of_array::SliceArrayExt;
 use sys::{ETrackingUniverseOrigin, HmdMatrix34_t};
 
 use crate::errors::ETrackedPropertyError;
@@ -255,6 +254,7 @@ impl VREvent {
                 std::mem::size_of::<sys::VREvent_t>(),
             )
             .as_array()
+            .unwrap_unchecked()
         };
         let data = &bytes[12..VREVENT_SIZE];
         let mut data_slice: [u8; VREVENT_SIZE - 12] = [0; VREVENT_SIZE - 12];
