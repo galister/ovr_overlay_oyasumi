@@ -248,14 +248,10 @@ pub struct VREvent {
 
 impl VREvent {
     fn parse(event: sys::VREvent_t) -> Option<VREvent> {
-        let bytes: [u8; VREVENT_SIZE] = unsafe {
-            *std::slice::from_raw_parts(
-                &event as *const sys::VREvent_t as *const u8,
-                std::mem::size_of::<sys::VREvent_t>(),
-            )
-            .as_array()
-            .unwrap_unchecked()
+        let bytes = unsafe {
+            std::slice::from_raw_parts(&event as *const sys::VREvent_t as *const u8, VREVENT_SIZE)
         };
+
         let data = &bytes[12..VREVENT_SIZE];
         let mut data_slice: [u8; VREVENT_SIZE - 12] = [0; VREVENT_SIZE - 12];
         data_slice.copy_from_slice(data);
