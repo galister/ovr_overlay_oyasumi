@@ -34,6 +34,7 @@ include_cpp! {
     generate!("vr::IVROverlay")
     generate!("vr::VROverlay")
     generate_pod!("vr::EVROverlayError")
+    generate_pod!("vr::VROverlayFlags")
     generate_pod!("vr::VROverlayHandle_t")
     generate_pod!("vr::VRVulkanTextureData_t")
     generate_pod!("vr::Texture_t")

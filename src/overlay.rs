@@ -163,6 +163,38 @@ impl<'c> OverlayManager<'c> {
         EVROverlayError::new(err)
     }
 
+    pub fn set_overlay_flag(
+        &mut self,
+        overlay: OverlayHandle,
+        flag: sys::VROverlayFlags,
+        enabled: bool,
+    ) -> Result<(), EVROverlayError> {
+        let err = unsafe { self.inner.as_mut().SetOverlayFlag(overlay.0, flag, enabled) };
+        EVROverlayError::new(err)
+    }
+
+    pub fn get_overlay_flag(
+        &mut self,
+        overlay: OverlayHandle,
+        flag: sys::VROverlayFlags,
+    ) -> Result<bool, EVROverlayError> {
+        let mut enabled = false;
+        let err = unsafe {
+            self.inner
+                .as_mut()
+                .GetOverlayFlag(overlay.0, flag, &mut enabled)
+        };
+        EVROverlayError::new(err)?;
+        Ok(enabled)
+    }
+
+    pub fn get_overlay_flags(&mut self, overlay: OverlayHandle) -> Result<u32, EVROverlayError> {
+        let mut flags = 0;
+        let err = unsafe { self.inner.as_mut().GetOverlayFlags(overlay.0, &mut flags) };
+        EVROverlayError::new(err)?;
+        Ok(flags)
+    }
+
     pub fn tint(&mut self, overlay: OverlayHandle) -> Result<ColorTint, EVROverlayError> {
         let mut tint = ColorTint::default();
         unsafe {
