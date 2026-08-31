@@ -1,7 +1,7 @@
 use crate::sys;
 
 use derive_more::{From, Into};
-use std::ffi::CStr;
+// use std::ffi::CStr;
 use std::fmt::Display;
 
 #[derive(Clone, PartialEq, Eq)]
@@ -15,11 +15,11 @@ impl EVRInitError {
         }
     }
 
-    pub fn description(&self) -> &'static str {
-        let desc: &'static CStr =
-            unsafe { CStr::from_ptr(sys::VR_GetVRInitErrorAsSymbol(self.0.clone())) };
-        desc.to_str().unwrap()
-    }
+    // pub fn description(&self) -> &'static str {
+    //     let desc: &'static CStr =
+    //         unsafe { CStr::from_ptr(sys::VR_GetVRInitErrorAsSymbol(self.0.clone())) };
+    //     desc.to_str().unwrap()
+    // }
 
     pub fn inner(&self) -> sys::EVRInitError {
         self.0.clone()
@@ -28,8 +28,9 @@ impl EVRInitError {
 impl Display for EVRInitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let num = self.0.clone() as u8;
-        let desc = self.description();
-        write!(f, "EVRInitError({num}): {desc}")
+        // let desc = self.description();
+        // write!(f, "EVRInitError({num})`: {desc}`")
+        write!(f, "EVRInitError({num})")
     }
 }
 
