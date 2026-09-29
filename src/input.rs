@@ -47,6 +47,10 @@ pub struct PoseActionData(pub sys::InputPoseActionData_t);
 #[repr(transparent)]
 pub struct OriginInfo(pub sys::InputOriginInfo_t);
 
+#[derive(From, Into /*, Debug, PartialEq, Eq, Clone, Copy*/)]
+#[repr(transparent)]
+pub struct EyeTrackingData(pub sys::VREyeTrackingData_t);
+
 type Result<T> = std::result::Result<T, EVRInputError>;
 
 pub trait ToSeconds {
@@ -250,6 +254,27 @@ impl<'c> InputManager<'c> {
 
         EVRInputError::new(err)?;
         Ok(PoseActionData(unsafe { data.assume_init() }))
+    }
+
+    pub fn get_eye_tracking_data_relative_to_now(
+        &mut self,
+        action: ActionHandle,
+        universe: pose::TrackingUniverseOrigin,
+        seconds_from_now: impl ToSeconds,
+    ) -> Result<EyeTrackingData> {
+        let mut data: MaybeUninit<sys::VREyeTrackingData_t> = MaybeUninit::uninit();
+        let err = unsafe {
+            self.inner.as_mut().GetEyeTrackingDataRelativeToNow(
+                action.0,
+                universe,
+                seconds_from_now.to_seconds(),
+                data.as_mut_ptr(),
+                std::mem::size_of::<sys::VREyeTrackingData_t>() as u32,
+            )
+        };
+
+        EVRInputError::new(err)?;
+        Ok(EyeTrackingData(unsafe { data.assume_init() }))
     }
 
     // ---- Action Origins ----
