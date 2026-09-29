@@ -267,6 +267,7 @@ impl EVRApplicationError {
             VRApplicationError_TransitionAborted => "TransitionAborted",
             VRApplicationError_IsTemplate => "IsTemplate",
             VRApplicationError_SteamVRIsExiting => "SteamVRIsExiting",
+            VRApplicationError_WaitingForChaperone => "WaitingForChaperone",
             VRApplicationError_BufferTooSmall => "BufferTooSmall",
             VRApplicationError_PropertyNotSet => "PropertyNotSet",
             VRApplicationError_UnknownProperty => "UnknownProperty",
